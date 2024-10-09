@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Rental System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('https://img.bomboradyo.com/baguio/2019/08/city-hall.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #333;
+            padding: 15px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -200px;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #575757;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+            border: 2px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .switch-link {
+            margin-top: 15px;
+        }
+
+        .switch-link a {
+            color: #007BFF;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .switch-link a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .open-btn {
+            font-size: 24px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(51, 51, 51, 0.7);
+            border: none;
+            cursor: pointer;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        .open-btn:hover {
+            background-color: rgba(51, 51, 51, 0.9);
+        }
+
+        .open-btn.hidden {
+            display: none;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: none;
+        }
+
+        .sidebar.active .close-btn {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <button class="open-btn" onclick="toggleSidebar()">☰</button>
+    <nav class="sidebar" id="sidebar">
+        <button class="close-btn" onclick="toggleSidebar()">×</button>
+        <ul>
+            <li><a href="kinema.html">Home</a></li>
+            <li><a href="Market_Section database.html" id="market-section-link">Market Sections</a></li>
+            <li><a href="kinema.html" id="logout-link" class="hidden">Log out</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" id="role-selection">
+        <h2>Choose Role</h2>
+        <div class="form-group">
+            <button onclick="showForm('client')">Client</button>
+        </div>
+        <div class="form-group">
+            <button onclick="showForm('employee')">Employee</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="login-container">
+        <h2>Client Login</h2>
+        <div class="form-group">
+            <label for="login-username">Username:</label>
+            <input type="text" id="login-username" required>
+        </div>
+        <div class="form-group">
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" required>
+        </div>
+        <div class="form-group">
+            <button onclick="login('client')">Log In</button>
+        </div>
+        <div class="button-group">
+            <button onclick="goBack()">Back</button>
+            <div class="switch-link">
+                <p>Don't have an account? <a href="#" onclick="showForm('signup')">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container hidden" id="employee-login-container">
+        <h2>Employee Login</h2>
+        <div class="form-group">
+            <label for="employee-username">Username:</label>
+            <input type="text" id="employee-username" required>
+        </div>
+        <div class="form-group">
+            <label for="employee-password">Password:</label>
+            <input type="password" id="employee-password" required>
+        </div>
+        <div class="form-group">
+            <button onclick="login('employee')">Log In</button>
+        </div>
+        <div class="button-group">
+            <button onclick="goBack()">Back</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="signup-container">
+        <h2>Sign Up</h2>
+        <div class="form-group">
+            <label for="signup-username">Username:</label>
+            <input type="text" id="signup-username" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-password">Password:</label>
+            <input type="password" id="signup-password" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-email">Email:</label>
+            <input type="email" id="signup-email" required>
+        </div>
+        <div class="form-group">
+            <button onclick="showForm('login')">Create Account</button>
+        </div>
+        <div class="button-group">
+            <button onclick="goBack()">Back</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            updateVisibility();
+        });
+
+        function showForm(role) {
+            document.getElementById('role-selection').classList.add('hidden');
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('employee-login-container').classList.add('hidden');
+            document.getElementById('signup-container').classList.add('hidden');
+
+            if (role === 'client') {
+                document.getElementById('login-container').classList.remove('hidden');
+            } else if (role === 'employee') {
+                document.getElementById('employee-login-container').classList.remove('hidden');
+            } else if (role === 'signup') {
+                document.getElementById('signup-container').classList.remove('hidden');
+            }
+        }
+
+        function login(role) {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('employee-login-container').classList.add('hidden');
+            document.getElementById('signup-container').classList.add('hidden');
+            if (role === 'client') {
+                window.location.href = 'client_profile.html';
+            } else if (role === 'employee') {
+                window.location.href = 'PAYMENT_UPDATED.html';
+            }
+        }
+
+        function goBack() {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('employee-login-container').classList.add('hidden');
+            document.getElementById('signup-container').classList.add('hidden');
+            document.getElementById('role-selection').classList.remove('hidden');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const openBtn = document.querySelector('.open-btn');
+
+            sidebar.classList.toggle('active');
+            openBtn.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
